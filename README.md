@@ -1,12 +1,14 @@
-# csgo-afk-controller
+# CSGO Utilities
 A script to handle auto gun drops amongst other things
 
+## Installation
+1. Download Python: `https://www.python.org/downloads/` 
+2. Edit `main.py` to change logLocation to your CSGO installation path. Example: `D:\Games\steamapps\common\Counter-Strike Global Offensive\csgo`
+
 ## Usage
-1. Download the latest release.
-2. Place the exe file into your csgo directory. `\steamapps\common\Counter-Strike Global Offensive\csgo`
-3. Enter this command `con_logfile "console.log"` into either your console each time or into autoexec. (Restart CSGO after running the command)
-4. Run the exe and follow the options
+1. Enter `con_logfile "console.log"` into the CSGO console each time or into your autoexec config. (Restart CSGO if it is running)
+2. Run the `start.bat` file each time you need to. (Pin to taskbar for easy access)
 
 ## Notes
-Both scripts require you to be tabbed into the game.
+This requires you to be tabbed into the game.
 You should probably delete the console.log file occasionally as it can get to a large size.
