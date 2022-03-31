@@ -30,47 +30,48 @@ def getDropLine():
         bombDropped = False
         print("Round checks cleared")
 
-    lines = list(open(logLocation, "r", encoding='utf-8'))
-    lastLines = lines[-20:]
-    for line in lastLines:
-        gun = line.partition("!drop")[2].strip()
-        player = line.partition("!drop")[0][:-2]
-        if "!drop" in line and player not in requestedDrops: 
-            dropGun = None
-            if gun in gunList:
-                dropGun = gunList[gun]
+    with open(logLocation, "r", encoding='ISO-8859-1') as logfile:
+        lines = list(logfile)
+        lastLines = lines[-20:]
+        for line in lastLines:
+            gun = line.partition("!drop")[2].strip()
+            player = line.partition("!drop")[0][:-2]
+            if "!drop" in line and player not in requestedDrops: 
+                dropGun = None
+                if gun in gunList:
+                    dropGun = gunList[gun]
 
-            elif gun == "bomb" or "c4" and bombDropped is False:
-                print(f"The bomb was dropped by {player}")
-                bombDropped = True
-                keyboard.write(f"use weapon_c4;drop")
+                elif gun == "bomb" or "c4" and bombDropped is False:
+                    print(f"The bomb was dropped by {player}")
+                    bombDropped = True
+                    keyboard.write(f"use weapon_c4;drop")
+                    keyboard.press_and_release('enter')
+                
+                if dropGun:
+                    print(f"{gun} was requested by {player}")
+                    requestedDrops.append(player)
+                    keyboard.write(f"buy {dropGun};drop")
+                    keyboard.press_and_release('enter')
+                    break
+
+            elif "!help" in line and player not in requestedHelp:
+                keyboard.write("say_team Usage: '!' followed by 'drop gun' (one per player); say_team Available guns to drop are:")
                 keyboard.press_and_release('enter')
-            
-            if dropGun:
-                print(f"{gun} was requested by {player}")
-                requestedDrops.append(player)
-                keyboard.write(f"buy {dropGun};drop")
+                gunString = ""
+                for key in gunList:
+                    gunString += ", " + key
+                keyboard.write(f"say_team {gunString}")
                 keyboard.press_and_release('enter')
-                break
+                requestedHelp.append(player)
+        currentSeconds += 1
+        print("Checked for requests")
 
-        elif "!help" in line and player not in requestedHelp:
-            keyboard.write("say_team Usage: '!' followed by 'drop gun' (one per player); say_team Available guns to drop are:")
-            keyboard.press_and_release('enter')
-            gunString = ""
-            for key in gunList:
-                gunString += ", " + key
-            keyboard.write(f"say_team {gunString}")
-            keyboard.press_and_release('enter')
-            requestedHelp.append(player)
-    currentSeconds += 1
-    print("Checked for requests")
-
-def init(logDir):
+def init(initLogLocation):
     global logLocation
-    logLocation = logDir + "\\console.log"
-    print("AFK Controller Initialised. Make sure to tab into the game and open the console within 5 seconds")
+    logLocation = initLogLocation
+    print("AFK Controller Initialised. Make sure to tab into the game and open the console within 5 seconds.")
     time.sleep(5)
-    keyboard.write(f"say_team AFK Controller Initialised. Try !help for additional information;+right")
+    keyboard.write(f"say_team AFK Controller initialised for me. Try !help for additional information;+right")
     keyboard.press_and_release('enter')
     while True:
         e1 = scheduler.enter(1, 1, getDropLine)

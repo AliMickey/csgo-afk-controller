@@ -1,26 +1,36 @@
-import afkInGame, afkAutoAccept, chatTranslate
+import afkInGame, afkAutoAccept, chatTranslate, os
 
-logLocation = "D:\Games\Steam\steamapps\common\Counter-Strike Global Offensive\csgo"
+# Edit the first path location only. Don't touch "\console.log"
+logLocation = "D:\Games\Steam\steamapps\common\Counter-Strike Global Offensive\csgo" + "\console.log"
 
 print("Choose from the following options:")
 print("1 - In Game AFK Controller")
 print("2 - Auto Match Accept Controller")
 print("3 - Auto Chat Translator")
-print("4 - Quit")
+print("4 - Delete Logfile (CS:GO Must Be Closed)")
+print("5 - Quit")
 
 while True:
     while True:
         try:
-            inp = int(input("Enter a number: "))
+            choice = int(input("Enter a number: "))
             break
-        except:
+        except Exception as e:
+            print(e)
             print("Invalid input")
+            break
 
-    if inp == 1:
+    if choice == 1:
         afkInGame.init(logLocation)
-    elif inp == 2:
+    elif choice == 2:
         afkAutoAccept.init()
-    elif inp == 3:
+    elif choice == 3:
         chatTranslate.init(logLocation)
-    elif inp == 4:
+    elif choice == 4:
+        if os.path.exists(logLocation):
+            os.remove(logLocation)
+            print("Logfile deleted.")
+        else:
+            print("Logfile does not exist.")
+    elif choice == 5:
         exit()
